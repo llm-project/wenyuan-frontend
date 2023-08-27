@@ -1,5 +1,5 @@
 # A new ice.js project
-文渊前端代码库
+
 ## Usage
 
 ```bash
