@@ -5,6 +5,8 @@
   "dependencies": {
     "@ice/runtime": "^1.0.0",
     "antd": "^5.8.4",
+    "dayjs": "^1.11.9",
+    "node-xlsx": "^0.23.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

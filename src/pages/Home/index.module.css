@@ -1,0 +1,51 @@
+.container {
+  height: 100%;
+  background: linear-gradient(180deg, #f5f4f6, #e6ebf7);
+  background-size: cover;
+  font-weight: 300;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.input {
+  width: 60%;
+  margin: 0 auto;
+  margin-bottom: 50px;
+  margin-top: 10px;
+  border: 1px solid white;
+  background: white;
+  border-radius: 10px;
+  font-size: 18px;
+  position: relative;
+}
+.input-focus {
+  border: 1px solid var(--color);
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  border-inline-end-width: 1px;
+  flex-grow: 0;
+}
+.input:before {
+  background-image: linear-gradient(180deg, rgba(233, 237, 247, 0), #e9edf7);
+  content: "";
+  height: 14px;
+  pointer-events: none;
+  top: -24px;
+  display: block;
+  position: relative;
+}
+
+.container textarea {
+  border: none !important;
+  box-shadow: none !important;
+  resize: none;
+  background: none !important;
+}
+.redo {
+  position: absolute;
+  left: -30px;
+  cursor: pointer;
+}
+.container-disabled {
+  background: rgba(0, 0, 0, 0.04);
+  cursor: not-allowed;
+}

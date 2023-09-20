@@ -5,8 +5,18 @@
 :root {
   --primary: #3178f6;
   --bg-primary: white;
+  height: 100%;
 }
 
+html,
 body {
   margin: 0;
+  height: 100%;
+}
+#ice-container {
+  height: 100%;
+  --color: #4096ff;
+}
+.common-table {
+  padding: 0 20px;
 }

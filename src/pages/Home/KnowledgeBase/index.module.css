@@ -1,0 +1,10 @@
+.table-action span {
+  cursor: pointer;
+}
+.table-action span:hover {
+  color: #69b1ff;
+}
+
+.table-action span:not(:first-child) {
+  margin-left: 10px;
+}

@@ -1,0 +1,40 @@
+.content {
+  width: 60%;
+  position: relative;
+  margin: 10px auto;
+}
+.content p {
+  margin-top: 0;
+}
+.chatItemContainer {
+  justify-content: center;
+  position: relative;
+  margin: 20px 0;
+}
+.container {
+  overflow: scroll;
+  scroll-behavior: smooth;
+  flex-grow: 1;
+}
+.icon {
+  height: 30px;
+  text-align: right;
+  margin-right: 10px;
+}
+.icon > * {
+  margin-left: 10px;
+  cursor: pointer;
+}
+.info {
+  padding: 15px;
+  background: white;
+  border-radius: 10px;
+  margin-block: 5px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+#bottom {
+  height: 50px;
+}
+.active {
+}
