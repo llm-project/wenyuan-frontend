@@ -32,6 +32,7 @@
   margin-block: 5px;
   box-sizing: border-box;
   overflow: auto;
+  white-space: pre-line;
 }
 #bottom {
   height: 50px;

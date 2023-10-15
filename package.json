@@ -4,11 +4,13 @@
   "description": "A new ice.js project.",
   "dependencies": {
     "@ice/runtime": "^1.0.0",
+    "ahooks": "^3.7.8",
     "antd": "^5.8.4",
+    "axios": "^1.5.0",
     "dayjs": "^1.11.9",
     "node-xlsx": "^0.23.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^0.0.0-experimental-09fbee89d-20231013",
+    "react-dom": "^0.0.0-experimental-09fbee89d-20231013"
   },
   "devDependencies": {
     "@applint/spec": "^1.2.3",

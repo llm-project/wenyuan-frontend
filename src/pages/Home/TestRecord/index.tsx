@@ -1,6 +1,7 @@
-import { Table } from "antd";
+import { Popconfirm, Table, Tooltip } from "antd";
+import { DownloadOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const columns = [
+const columns: any = [
   {
     title: "测试名称",
     dataIndex: "name",
@@ -33,8 +34,23 @@ const columns = [
   },
   {
     title: "操作",
-    dataIndex: "address",
-    key: "address",
+    key: "action",
+    align: "center",
+    width: 100,
+    render: () => {
+      return (
+        <span>
+          <Tooltip title="下载">
+            <DownloadOutlined />
+          </Tooltip>
+          <Tooltip title="删除">
+            <Popconfirm title="确定删除吗">
+              <DeleteOutlined style={{ marginLeft: 10 }} />
+            </Popconfirm>
+          </Tooltip>
+        </span>
+      );
+    },
   },
 ];
 const dataSource = [

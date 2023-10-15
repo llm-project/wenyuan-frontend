@@ -1,4 +1,5 @@
 import React from "react";
+import { useRequest } from "ahooks";
 
 const useChatContext = () => {
   const [chatId, setChatId] = React.useState(null);
@@ -7,6 +8,12 @@ const useChatContext = () => {
 
   const [messages, setMessages] = React.useState<any>([]);
 
+  // const use
+
+  const createNew = () => {
+    setMessages([]);
+  };
+
   const onSelect = (id) => {
     setSelectId(id);
   };
@@ -14,9 +21,13 @@ const useChatContext = () => {
   return {
     chatId,
     setChatId,
+    createNew,
     messages,
     addMessage: (msg) => {
-      setMessages([...messages, { ...msg, reqTime: Date.now() }]);
+      setMessages([
+        ...messages,
+        { ...msg, reqTime: Date.now(), id: Date.now() },
+      ]);
     },
     selectId,
     onSelect,
@@ -32,9 +43,10 @@ const useChatContext = () => {
   };
 };
 
-const chatContext: any = React.createContext(null);
+const chatContext =
+  React.createContext<ReturnType<typeof useChatContext>>(null);
 
-chatContext.myHook = useChatContext;
+(chatContext as any).myHook = useChatContext;
 
 export const createContextWrapper = (Com, context: any) => {
   const { Provider } = context;

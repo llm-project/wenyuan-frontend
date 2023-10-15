@@ -1,26 +1,37 @@
-import { Button, Form, Radio, Table, Upload } from "antd";
+import { Button, Form, Input, Radio, Table, Upload } from "antd";
 import { useMemo, useState } from "react";
 import {
   DeleteOutlined,
   DownloadOutlined,
   PlusOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import styles from "./index.module.css";
 import Modal from "antd/es/modal/Modal";
+import { Link } from "@ice/runtime";
 
-const columns = [
+const columns: any = [
   {
     title: "知识库名",
     dataIndex: "name",
     key: "name",
+    width: 200,
+    render: (val, record) => {
+      console.log(val, record);
+      return (
+        <Link to={`/Home/KnowledgeBase/detail?id=${record.key}`}>{val}</Link>
+      );
+    },
   },
   {
     title: "更新时间",
-    dataIndex: "age",
-    key: "age",
+    dataIndex: "updateDate",
+    key: "updateDate",
   },
   {
     title: "操作",
+    align: "center",
+    width: 200,
     render: (record) => {
       console.log(record);
       return (
@@ -32,36 +43,38 @@ const columns = [
     },
   },
 ];
-const dataSource = [
+
+let dataSource = [
   {
-    key: "1",
+    key: 1,
     name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
+    updateDate: 32,
   },
   {
-    key: "2",
+    key: 2,
     name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
+    updateDate: 42,
   },
 ];
 
 const KnowledgeBase = () => {
-  const [type, setType] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
 
   const [form] = Form.useForm();
-
-  const col = useMemo(() => {
-    return columns;
-  }, [type]);
-
   const handleSubmit = () => {
     form
       .validateFields()
       .then((values) => {
         console.log(values);
+        dataSource = [
+          ...dataSource,
+          {
+            key: Date.now(),
+            updateDate: Date(),
+            ...values,
+          },
+        ];
+        setIsOpen(false);
       })
       .catch((e) => {
         console.log(e);
@@ -74,7 +87,7 @@ const KnowledgeBase = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          margin: "20px 0",
+          marginBottom: 20,
         }}
       >
         <Button
@@ -83,20 +96,10 @@ const KnowledgeBase = () => {
             setIsOpen(true);
           }}
         >
-          导入
+          新建知识库
         </Button>
-        <Radio.Group
-          value={type}
-          onChange={(e) => {
-            setType(e.target.value);
-          }}
-        >
-          <Radio.Button value={1}>文档</Radio.Button>
-          <Radio.Button value={2}>URL</Radio.Button>
-          <Radio.Button value={3}>问答对</Radio.Button>
-        </Radio.Group>
       </div>
-      <Table columns={col} dataSource={dataSource} />
+      <Table columns={columns} dataSource={dataSource} />
       <Modal
         title="导入文件"
         open={isOpen}
@@ -114,32 +117,8 @@ const KnowledgeBase = () => {
           wrapperCol={{ span: 10 }}
           scrollToFirstError
         >
-          <Form.Item label="数据类型" name="type" initialValue={1} required>
-            <Radio.Group>
-              <Radio.Button value={1}>文档</Radio.Button>
-              <Radio.Button value={2}>URL</Radio.Button>
-              <Radio.Button value={3}>问答对</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item
-            label="文件"
-            name="file"
-            valuePropName="fileList"
-            getValueFromEvent={(e: any) => {
-              if (Array.isArray(e)) {
-                return e;
-              }
-              return e?.fileList;
-            }}
-            required
-            rules={[{ required: true, message: "请选择上传文件" }]}
-          >
-            <Upload listType="picture-card">
-              <div>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            </Upload>
+          <Form.Item label="知识库名称" name="name" required>
+            <Input />
           </Form.Item>
         </Form>
       </Modal>

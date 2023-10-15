@@ -8,3 +8,6 @@
 .table-action span:not(:first-child) {
   margin-left: 10px;
 }
+.header button:not(:first-child) {
+  margin-left: 10px;
+}

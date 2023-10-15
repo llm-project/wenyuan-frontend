@@ -9,9 +9,8 @@ import chatContext, { createContextWrapper } from "@/contexts/chatContext";
 const IndexPage = (props) => {
   const { chatId = 1 } = props;
   const [val, setVal] = React.useState("");
-  const { addMessage, setChatId, messages } = React.useContext(
-    chatContext
-  ) as any;
+  const { addMessage, setChatId, messages, createNew } =
+    React.useContext(chatContext);
 
   const isDisabled = React.useMemo(() => {
     return messages?.length && !messages[messages.length - 1].isDone;
@@ -66,7 +65,7 @@ const IndexPage = (props) => {
       <ChatBox />
       <div className={`${styles.input} `} tabIndex={1}>
         <Tooltip title="点击开启一轮新的对话（将清空左侧对话和右侧命中文本内容）">
-          <RedoOutlined className={styles.redo} />
+          <RedoOutlined className={styles.redo} onClick={createNew} />
         </Tooltip>
         <Input.TextArea
           value={val}

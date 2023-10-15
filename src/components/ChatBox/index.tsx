@@ -5,6 +5,7 @@ import styles from "./index.module.css";
 import chatContext from "@/contexts/chatContext";
 import dayjs from "dayjs";
 import icon from "@/assets/little-icon.png";
+import Modal from "antd/es/modal/Modal";
 
 interface IProps {}
 
@@ -18,9 +19,7 @@ const temp = `随着
 
 const ChatItem = (props) => {
   const { id, req, res, isDone, reqTime, resTime } = props;
-  const { updateMessage, onSelect, selectId } = React.useContext(
-    chatContext
-  ) as any;
+  const { updateMessage, onSelect, selectId } = React.useContext(chatContext);
 
   const timeN = React.useMemo(() => {
     return resTime || Date.now();
@@ -49,7 +48,7 @@ const ChatItem = (props) => {
               resTime: timeN,
             });
           } else {
-            val += "闻铺天";
+            val += "闻铺天一";
           }
           return val;
         });
@@ -78,6 +77,7 @@ const ChatItem = (props) => {
           </div> */}
           <p
             // className={styles.info}
+            style={{ whiteSpace: "pre-line" }}
             dangerouslySetInnerHTML={{ __html: req }}
           />
         </div>
@@ -127,15 +127,50 @@ const ChatBox: React.FunctionComponent<IProps> = () => {
     flowToBottom();
   }, []);
 
-  const { messages } = React.useContext(chatContext) as any;
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const { messages, selectId, onSelect } = React.useContext(chatContext);
+
+  React.useEffect(() => {
+    console.log("test", selectId);
+    if (selectId) {
+      setIsOpen(true);
+    }
+  }, [selectId]);
 
   return (
     <div className={styles.container} id={styles.container}>
       {messages.map((i) => (
         <ChatItem {...i} key={i.id} />
       ))}
-      {/* <ChatItem /> */}
+
       <div id={styles.bottom}></div>
+      <Modal
+        open={isOpen}
+        cancelButtonProps={{
+          style: {
+            display: "none",
+          },
+        }}
+        closable={false}
+        okText="确认"
+        onOk={() => {
+          setIsOpen(false);
+          onSelect(null);
+        }}
+        title="XXXXXXXXXXXXXXXXXXXXXXXXX"
+        bodyStyle={{
+          borderTop: "1px solid grey",
+          borderBottom: "1px solid grey",
+          padding: "10px 0",
+        }}
+      >
+        <div>XXXXXXXXXXXXXXXXXXXXXXXXX</div>
+        <div>XXXXXXXXXXXXXXXXXXXXXXXXX</div>
+        <div>XXXXXXXXXXXXXXXXXXXXXXXXX</div>
+        <div>XXXXXXXXXXXXXXXXXXXXXXXXX</div>
+        <div>来源：XXXXXXXXXXXXXXXXXXXXXXXXX</div>
+      </Modal>
     </div>
   );
 };

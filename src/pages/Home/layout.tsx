@@ -10,7 +10,7 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Button, Menu } from "antd";
-import { Link, Outlet, useLocation } from "ice";
+import { Link, KeepAliveOutlet, useLocation } from "ice";
 import icon from "@/assets/icon.png";
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -97,14 +97,7 @@ const App: React.FC = () => {
           background: "linear-gradient(180deg, #f5f4f6, #e6ebf7)",
         }}
       >
-        {/* <Header /> */}
-        <div
-          style={{
-            height: "calc(100% - 102px)",
-          }}
-        >
-          <Outlet />
-        </div>
+        <KeepAliveOutlet />
       </div>
     </div>
   );
