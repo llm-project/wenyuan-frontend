@@ -33,7 +33,6 @@ const UploadUrl = () => {
       <Form.Item noStyle shouldUpdate>
         {({ getFieldValue }) => {
           const isNeedLogin = getFieldValue("isNeedLogin");
-          console.log(isNeedLogin);
           return isNeedLogin ? (
             <Form.Item
               label="用户名"
@@ -50,7 +49,6 @@ const UploadUrl = () => {
       <Form.Item noStyle shouldUpdate>
         {({ getFieldValue }) => {
           const isNeedLogin = getFieldValue("isNeedLogin");
-          console.log(isNeedLogin);
           return isNeedLogin ? (
             <Form.Item
               label="密码"

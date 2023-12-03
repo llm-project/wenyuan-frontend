@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import {
-  AppstoreOutlined,
+  RobotOutlined,
   ContainerOutlined,
   DesktopOutlined,
   MailOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  PieChartOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Button, Menu } from "antd";
@@ -32,22 +29,12 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("对话测试", "Home", <PieChartOutlined />),
+  // getItem("对话测试", "Home", <PieChartOutlined />),
   getItem("知识库管理", "Home/KnowledgeBase", <DesktopOutlined />),
-  getItem("机器人配置", "Home/RobotManage", <ContainerOutlined />),
-  getItem("测试记录", "Home/TestRecord", <MailOutlined />),
+  getItem("机器人配置", "Home/RobotManage", <RobotOutlined />),
+  // getItem("测试记录", "Home/TestRecord", <MailOutlined />),
 ];
 
-const breads = [
-  {
-    path: "/Home",
-    title: "对话测试",
-  },
-  {
-    path: "/Home/KnowledgeBase",
-    title: "知识库管理",
-  },
-];
 const Header = () => {
   const info = useLocation();
 
@@ -67,7 +54,6 @@ const Header = () => {
 
 const App: React.FC = () => {
   const info = useLocation();
-  console.log(info);
   return (
     <div style={{ height: "100%", display: "flex" }}>
       <div style={{ height: "100%", width: 200 }}>

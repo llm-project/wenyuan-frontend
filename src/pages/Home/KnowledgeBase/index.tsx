@@ -1,14 +1,30 @@
-import { Button, Form, Input, Radio, Table, Upload } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Popconfirm,
+  Radio,
+  Table,
+  Tooltip,
+  Upload,
+} from "antd";
 import { useMemo, useState } from "react";
 import {
   DeleteOutlined,
   DownloadOutlined,
   PlusOutlined,
   EditOutlined,
+  SendOutlined,
 } from "@ant-design/icons";
 import styles from "./index.module.css";
 import Modal from "antd/es/modal/Modal";
-import { Link } from "@ice/runtime";
+import { Link, history } from "@ice/runtime";
+import { useRequest } from "ahooks";
+import {
+  createKnowledge,
+  deleteKnowledge,
+  getKnowledgeList,
+} from "@/services/modules/knowledge";
 
 const columns: any = [
   {
@@ -17,9 +33,10 @@ const columns: any = [
     key: "name",
     width: 200,
     render: (val, record) => {
-      console.log(val, record);
       return (
-        <Link to={`/Home/KnowledgeBase/detail?id=${record.key}`}>{val}</Link>
+        <Link to={`/Home/KnowledgeBase/detail`} state={record}>
+          {val}
+        </Link>
       );
     },
   },
@@ -33,27 +50,31 @@ const columns: any = [
     align: "center",
     width: 200,
     render: (record) => {
-      console.log(record);
       return (
         <div className={styles["table-action"]}>
-          <DownloadOutlined />
-          <DeleteOutlined />
+          <Tooltip title="对话测试">
+            <SendOutlined
+              onClick={() => {
+                history.push("/Home/Chat", {
+                  name: record.name,
+                });
+              }}
+            />
+          </Tooltip>
+          {/* <DownloadOutlined /> */}
+          <Popconfirm
+            title="确定要删除该知识库吗？"
+            onConfirm={async () => {
+              await deleteKnowledge({
+                name: record.name,
+              });
+            }}
+          >
+            <DeleteOutlined />
+          </Popconfirm>
         </div>
       );
     },
-  },
-];
-
-let dataSource = [
-  {
-    key: 1,
-    name: "胡彦斌",
-    updateDate: 32,
-  },
-  {
-    key: 2,
-    name: "胡彦祖",
-    updateDate: 42,
   },
 ];
 
@@ -61,19 +82,18 @@ const KnowledgeBase = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [form] = Form.useForm();
+
+  const { data, loading, refresh } = useRequest(async () => {
+    const data = await getKnowledgeList();
+    return data;
+  });
+
   const handleSubmit = () => {
     form
       .validateFields()
-      .then((values) => {
-        console.log(values);
-        dataSource = [
-          ...dataSource,
-          {
-            key: Date.now(),
-            updateDate: Date(),
-            ...values,
-          },
-        ];
+      .then(async (values) => {
+        await createKnowledge(values.name);
+        refresh();
         setIsOpen(false);
       })
       .catch((e) => {
@@ -99,7 +119,7 @@ const KnowledgeBase = () => {
           新建知识库
         </Button>
       </div>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table columns={columns} dataSource={data} loading={loading} />
       <Modal
         title="导入文件"
         open={isOpen}

@@ -1,5 +1,6 @@
 import React from "react";
 import { useRequest } from "ahooks";
+import { chatWithKnowledge } from "@/services/modules/chat";
 
 const useChatContext = () => {
   const [chatId, setChatId] = React.useState(null);
@@ -7,6 +8,7 @@ const useChatContext = () => {
   const [selectId, setSelectId] = React.useState(null);
 
   const [messages, setMessages] = React.useState<any>([]);
+  const [knowledgeBaseName, setKnowledgeBaseName] = React.useState(null);
 
   // const use
 
@@ -23,11 +25,37 @@ const useChatContext = () => {
     setChatId,
     createNew,
     messages,
+    setKnowledgeBaseName,
     addMessage: (msg) => {
-      setMessages([
-        ...messages,
-        { ...msg, reqTime: Date.now(), id: Date.now() },
-      ]);
+      const id = Date.now();
+      setMessages([...messages, { ...msg, reqTime: Date.now(), id }]);
+      chatWithKnowledge({
+        knowledgeBaseName,
+        query: msg.req,
+        stream: false,
+        history: messages.reduce((total, i) => {
+          if (i.isDone) {
+            total.push({
+              role: "user",
+              content: i.req,
+            });
+            total.push({
+              role: "assistant",
+              content: i.res,
+            });
+          }
+          return total;
+        }, []),
+      }).then((result) => {
+        setMessages((msg) => {
+          const target = msg.find((i) => i.id === id);
+          target.res = result.answer;
+          target.resTime = Date.now();
+          target.isDone = true;
+          target.docs = result.docs;
+          return [...msg];
+        });
+      });
     },
     selectId,
     onSelect,
@@ -37,6 +65,7 @@ const useChatContext = () => {
         target.res = data.res;
         target.resTime = data.resTime;
         target.isDone = true;
+        target.docs = data.docs;
         return [...msg];
       });
     },

@@ -49,3 +49,10 @@
   background: rgba(0, 0, 0, 0.04);
   cursor: not-allowed;
 }
+.logo {
+  cursor: pointer;
+}
+.logo:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}

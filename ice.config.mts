@@ -9,11 +9,11 @@ export default defineConfig(() => ({
     onDemand: true,
     format: "esm",
   },
-  // proxy: {
-  //   "/*": {
-  //     target: "http://jsonplaceholder.typicode.com/",
-  //     changeOrigin: true,
-  //     // pathRewrite: { "^/api": "" },
-  //   },
-  // },
+  proxy: {
+    "/api": {
+      target: "http://shubisd.natapp1.cc",
+      changeOrigin: true,
+      pathRewrite: { "^/api": "" },
+    },
+  },
 }));

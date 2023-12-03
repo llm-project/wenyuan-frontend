@@ -1,4 +1,14 @@
-import { Button, Form, Radio, Table, Tooltip, Upload } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Form,
+  Popconfirm,
+  Radio,
+  Table,
+  Tooltip,
+  Upload,
+  message,
+} from "antd";
 import React, { useMemo, useState } from "react";
 import {
   DeleteOutlined,
@@ -12,8 +22,16 @@ import Modal from "antd/es/modal/Modal";
 import UploadFile from "@/components/forms/UploadFile";
 import UploadUrl from "@/components/forms/UploadUrl";
 import AddQAPairs from "@/components/forms/AddQAPairs";
+import { Link, useLocation, history } from "ice";
+import { useRequest } from "ahooks";
+import {
+  deleteDoc,
+  downloadDoc,
+  getDocList,
+  uploadDoc,
+} from "@/services/modules/knowledge";
 
-const columns = [
+const getColumns = (context) => [
   {
     title: "文件名",
     dataIndex: "name",
@@ -39,129 +57,167 @@ const columns = [
     align: "center",
     width: 200,
     render: (record) => {
-      console.log(record);
-      return (
-        <div className={styles["table-action"]}>
-          <Tooltip title="下载">
-            <DownloadOutlined />
-          </Tooltip>
-          <Tooltip title="删除">
-            <DeleteOutlined />
-          </Tooltip>
-        </div>
-      );
-    },
-  },
-];
-const urlCol = [
-  {
-    title: "URL",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "网站备注",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "导入时间",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "更新时间",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "操作",
-    align: "center",
-    width: 200,
-    render: (record) => {
-      console.log(record);
       return (
         <div className={styles["table-action"]}>
           <Tooltip title="更新">
             <RedoOutlined />
           </Tooltip>
-          <Tooltip title="删除">
-            <DeleteOutlined />
+          <Tooltip title="下载">
+            <DownloadOutlined
+              onClick={async () => {
+                const res = await downloadDoc({
+                  file_name: record.name,
+                  knowledge_base_name: record.knowledgeBaseName,
+                });
+              }}
+            />
           </Tooltip>
+          <Popconfirm
+            title="确定删除吗？"
+            onConfirm={async () => {
+              await deleteDoc({
+                doc_name: record.name,
+                knowledge_base_name: record.knowledgeBaseName,
+                delete_content: true,
+              });
+              // if (res.code === 200) {
+              message.success("删除成功");
+              context.refresh();
+              // } else {
+              //   message.error("删除失败");
+              // }
+            }}
+          >
+            <Tooltip title="删除">
+              <DeleteOutlined />
+            </Tooltip>
+          </Popconfirm>
         </div>
       );
     },
   },
 ];
-const reqCol = [
-  {
-    title: "问题",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "答案",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "更新时间",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "操作",
-    align: "center",
-    width: 200,
-    render: (record) => {
-      console.log(record);
-      return (
-        <div className={styles["table-action"]}>
-          <Tooltip title="编辑">
-            <EditOutlined />
-          </Tooltip>
-          <Tooltip title="删除">
-            <DeleteOutlined />
-          </Tooltip>
-        </div>
-      );
-    },
-  },
-];
-const dataSource = [
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-];
+// const urlCol = [
+//   {
+//     title: "URL",
+//     dataIndex: "name",
+//     key: "name",
+//   },
+//   {
+//     title: "网站备注",
+//     dataIndex: "age",
+//     key: "age",
+//   },
+//   {
+//     title: "导入时间",
+//     dataIndex: "age",
+//     key: "age",
+//   },
+//   {
+//     title: "更新时间",
+//     dataIndex: "age",
+//     key: "age",
+//   },
+//   {
+//     title: "操作",
+//     align: "center",
+//     width: 200,
+//     render: (record) => {
+//       console.log(record);
+//       return (
+//         <div className={styles["table-action"]}>
+//           <Tooltip title="更新">
+//             <RedoOutlined />
+//           </Tooltip>
+//           <Tooltip title="删除">
+//             <DeleteOutlined />
+//           </Tooltip>
+//         </div>
+//       );
+//     },
+//   },
+// ];
+// const reqCol = [
+//   {
+//     title: "问题",
+//     dataIndex: "name",
+//     key: "name",
+//   },
+//   {
+//     title: "答案",
+//     dataIndex: "age",
+//     key: "age",
+//   },
+//   {
+//     title: "更新时间",
+//     dataIndex: "age",
+//     key: "age",
+//   },
+//   {
+//     title: "操作",
+//     align: "center",
+//     width: 200,
+//     render: (record) => {
+//       console.log(record);
+//       return (
+//         <div className={styles["table-action"]}>
+//           <Tooltip title="编辑">
+//             <EditOutlined />
+//           </Tooltip>
+//           <Tooltip title="删除">
+//             <DeleteOutlined />
+//           </Tooltip>
+//         </div>
+//       );
+//     },
+//   },
+// ];
 
-const colMap: any[] = [null, columns, urlCol, reqCol];
+// const colMap: any[] = [null, columns, urlCol, reqCol];
 
 const KnowledgeBase = () => {
+  const location = useLocation();
   const [type, setType] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
 
   const [form] = Form.useForm();
 
+  const name = location.state?.name;
+
   const [formItems, setFormItems] = useState(null);
 
+  const { data, loading, refresh } = useRequest(
+    async () => {
+      const res = await getDocList(name);
+      return res;
+    },
+    {
+      refreshDeps: [name],
+    }
+  );
+
   const col = useMemo(() => {
-    return colMap[type];
-  }, [type]);
+    return getColumns({
+      refresh,
+      knowledgeBaseName: name,
+    });
+  }, [refresh, name]);
 
   const handleSubmit = () => {
     form
       .validateFields()
-      .then((values) => {
-        console.log(values);
+      .then(async (values) => {
+        const reader = new FileReader();
+        var formData = new FormData(); // 创建FormData对象
+        formData.append("file", values.file[0].originFileObj); // 将文件添加到FormData对象中
+
+        await uploadDoc({
+          file: values.file[0].originFileObj,
+          knowledge_base_name: name,
+        });
+        setIsOpen(false);
+        message.success("上传成功");
+        refresh();
       })
       .catch((e) => {
         console.log(e);
@@ -172,49 +228,78 @@ const KnowledgeBase = () => {
     if (type === 3) {
       return (
         <div className={styles.header}>
-          <Button
-            type="primary"
-            onClick={() => {
-              setFormItems(AddQAPairs);
-              setIsOpen(true);
-            }}
-          >
-            添加问答对
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              setFormItems(UploadFile);
-              setIsOpen(true);
-            }}
-          >
-            批量导入
-          </Button>
+          <div>
+            <div>{name}</div>
+          </div>
+          <div>
+            <Button
+              type="primary"
+              onClick={() => {
+                setFormItems(AddQAPairs);
+                setIsOpen(true);
+              }}
+            >
+              添加问答对
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                setFormItems(UploadFile);
+                setIsOpen(true);
+              }}
+            >
+              批量导入
+            </Button>
 
-          <Button
-            type="primary"
-            onClick={() => {
-              setIsOpen(true);
-            }}
-          >
-            批量导出
-          </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                setIsOpen(true);
+              }}
+            >
+              批量导出
+            </Button>
+          </div>
         </div>
       );
     } else {
       return (
-        <Button
-          type="primary"
-          onClick={() => {
-            setFormItems(type === 1 ? UploadFile : UploadUrl);
-            setIsOpen(true);
-          }}
-        >
-          导入
-        </Button>
+        <>
+          <Breadcrumb
+            items={[
+              { title: <Link to="/Home/KnowledgeBase">知识库管理</Link> },
+              {
+                title: name,
+              },
+            ]}
+          />
+          <div>
+            <Button
+              onClick={() => {
+                history.push("/Home/Chat", {
+                  name,
+                });
+              }}
+            >
+              对话测试
+            </Button>
+            <Button
+              style={{
+                marginLeft: 20,
+              }}
+              type="primary"
+              onClick={() => {
+                setFormItems(type === 1 ? UploadFile : UploadUrl);
+                setIsOpen(true);
+              }}
+            >
+              导入
+            </Button>
+          </div>
+        </>
       );
     }
-  }, [type]);
+  }, [type, name]);
 
   return (
     <div className="common-table">
@@ -226,7 +311,7 @@ const KnowledgeBase = () => {
         }}
       >
         {Header}
-        <Radio.Group
+        {/* <Radio.Group
           value={type}
           onChange={(e) => {
             setType(e.target.value);
@@ -235,9 +320,14 @@ const KnowledgeBase = () => {
           <Radio.Button value={1}>文档</Radio.Button>
           <Radio.Button value={2}>URL</Radio.Button>
           <Radio.Button value={3}>问答对</Radio.Button>
-        </Radio.Group>
+        </Radio.Group> */}
       </div>
-      <Table columns={col} dataSource={dataSource} />
+      <Table
+        rowKey="name"
+        columns={col as any}
+        dataSource={data}
+        loading={loading}
+      />
       <Modal
         title="导入文件"
         open={isOpen}

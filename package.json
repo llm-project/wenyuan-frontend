@@ -9,6 +9,7 @@
     "axios": "^1.5.0",
     "dayjs": "^1.11.9",
     "node-xlsx": "^0.23.0",
+    "qs": "^6.11.2",
     "react": "^0.0.0-experimental-09fbee89d-20231013",
     "react-dom": "^0.0.0-experimental-09fbee89d-20231013"
   },

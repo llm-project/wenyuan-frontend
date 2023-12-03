@@ -1,0 +1,31 @@
+.container {
+}
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #666;
+  display: inline-block;
+  /* margin: 0 5px; */
+  --delay: 0s;
+  animation: 1.5s dot-animation var(--delay) infinite;
+}
+@keyframes dot-animation {
+  75% {
+    margin-bottom: 10px;
+  }
+  100% {
+    margin-bottom: 0;
+  }
+}
+.dot:not(:first-child) {
+  margin-left: 10px;
+}
+.dot:nth-child(2) {
+  margin-left: 10px;
+  --delay: 0.5s;
+}
+.dot:nth-child(3) {
+  margin-left: 10px;
+  --delay: 1s;
+}

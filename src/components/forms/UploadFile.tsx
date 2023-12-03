@@ -16,10 +16,10 @@ const UploadDoc = () => {
         required
         rules={[{ required: true, message: "请选择上传文件" }]}
       >
-        <Upload listType="picture-card">
+        <Upload listType="picture-card" maxCount={1}>
           <div>
             <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+            <div style={{ marginTop: 8 }}>选择上传文件</div>
           </div>
         </Upload>
       </Form.Item>
